@@ -6,13 +6,13 @@ import CategoryForum from "../pages/forum/categoryForum"
 import AuthenLayout from "../layouts/authenLayout";
 import Login from "../component/auth/login";
 import Register from "../component/auth/register";
-
+import HomePage from "../pages/homePage";
 
 const AppRouter = () => {
   return (
     <Routes>
        <Route path="/" element={<MainLayout />}>
-          <Route path="/" element={<h1>Home</h1>} />
+          <Route path="/" element={<HomePage />} />
           <Route path="/forum" element={<ForumLayout />}>
              <Route index element={<MainForum />} />
             <Route path=":category" element={<CategoryForum />} />

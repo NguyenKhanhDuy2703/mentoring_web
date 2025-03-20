@@ -8,27 +8,29 @@ const MainLayout = () => {
   const [inforUser , setInforUser] = useState("");
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const data = await homeApi(); // Chờ API trả về dữ liệu
-        setInforUser(data);
-      } catch (error) {
-        console.error("Error fetching user info:", error);
+        try {
+          const data = await homeApi(); // Chờ API trả về dữ liệu
+          setInforUser(data);
+        } catch (error) {
+          console.error("Error fetching user info:", error);
+        }
+      
       }
-    };
     fetchData();
   }, []);
   return (
     <div className="min-h-screen">
       {/* Navbar */}
+      <inforUserContext.Provider value={inforUser}>
       <div className="fixed top-0 left-0 w-full bg-white shadow-md z-10 p-4 flex items-center ">
         <h2 className="flex-2 text-2xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 text-transparent bg-clip-text ml-4">
           Mentoring
         </h2>
 
         <div className="flex-8">
-        <inforUserContext.Provider value={inforUser}>
+        
             <Navbar />    
-         </inforUserContext.Provider>
+        
         
         </div>
       </div>
@@ -47,6 +49,7 @@ const MainLayout = () => {
         {/* other activity */}
         <div className="flex-2"></div>
       </div>
+      </inforUserContext.Provider>
     </div>
   );
 };
