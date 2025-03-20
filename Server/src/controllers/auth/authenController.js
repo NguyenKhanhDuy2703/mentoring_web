@@ -61,9 +61,10 @@ const RegisterController = async (req, res) => {
 const LogoutController = async (req, res) => {
   const checktokenExist = req.cookies.token;
   if(!checktokenExist){
-    return res.status(400).json({ message: "You not login" });
+    return res.status(400).json({ message: "Not find Token " });
   }
   res.clearCookie("token");
   return res.status(200).json({ message: "Logout successful" });
 };
+
 module.exports = { LoginController, RegisterController , LogoutController };

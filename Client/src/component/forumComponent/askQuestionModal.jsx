@@ -1,12 +1,15 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { X, Image, Folder, Tag, Trash2 } from "lucide-react";
-
+import {inforUserContext} from "../../layouts/mainLayout"
+import  {createQuestion} from "../../services/forumServices.js"
 export default function AskQuestionModal({ onClose }) {
-  const [activeTab, setActiveTab] = useState("question");
+  const [activeTab, setActiveTab] = useState("ask");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
   const [Tags , setTags] = useState([]);
+  const inforUser = useContext(inforUserContext)
+  // xư lý hình ảnh 
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -17,19 +20,31 @@ export default function AskQuestionModal({ onClose }) {
       };
       reader.readAsDataURL(file);
     }
+   
   };
 
-  const handleAskQuestion = () => {
-    if (!title.trim() || !content.trim()) {
+  const handleAskQuestion = async () => {
+    if ( !content.trim() || Tags.length === 0) {
       alert("Please enter a title and content.");
-
       return;
     }
-    console.log("Title:", title);
-    console.log("Content:", content);
-    console.log("Tags:", Tags);
-  };
 
+    const newQuestion = {
+      user_id: inforUser?.user?.id,
+      title: title,
+      body: content,
+      image: selectedImage,
+      tags: Tags,
+      folder: "",
+      types : activeTab
+    };
+    console.log(newQuestion);
+    
+    const request = await createQuestion( newQuestion);
+    console.log(request); 
+    onClose(selectedImage);
+  };
+  console.log(selectedImage)
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50">
       <div className="bg-white w-[500px] rounded-2xl shadow-lg p-6 border border-gray-200">
@@ -42,7 +57,7 @@ export default function AskQuestionModal({ onClose }) {
 
         {/* Tab Selection */}
         <div className="flex mt-2 border-b border-gray-300">
-          {["question", "post"].map((tab) => (
+          {["ask", "post"].map((tab) => (
             <button
               key={tab}
               className={`w-1/2 py-2 text-center text-sm font-semibold transition-all ${
@@ -52,7 +67,7 @@ export default function AskQuestionModal({ onClose }) {
               }`}
               onClick={() => setActiveTab(tab)}
             >
-              {tab === "question" ? "Ask Question" : "Create Post"}
+              {tab === "askz" ? "Ask Question" : "Create Post"}
             </button>
           ))}
         </div>
@@ -60,10 +75,11 @@ export default function AskQuestionModal({ onClose }) {
         {/* User Info */}
         <div className="flex items-center gap-3 mt-4">
           <div className="w-10 h-10 bg-gray-300 rounded-full"></div>
-          <p className="text-gray-900 text-sm font-medium">Pete Lada</p>
+          <p className="text-gray-900 text-sm font-medium capitalize">{inforUser?.user?.full_name}</p>
+
           <select className="border-blue-600 px-3 py-1.5 text-sm rounded border focus:ring-2 focus:ring-blue-400 outline-none">
             <option>Public</option>
-            <option>Private</option>
+            <option>Limition</option>
           </select>
         </div>
 
