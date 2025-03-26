@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 
 const Sidebar = () => {
   return (
-    <aside className="bg-white w-64 min-h-screen p-4 flex flex-col text-gray-900 shadow-md border-r border-gray-200">
+    <aside className="bg-white w-64  p-4 flex flex-col text-gray-900 shadow-md border-r border-gray-200">
       {/* Menu Items */}
       <nav className="flex-1">
         <ul className="space-y-1">
@@ -33,7 +33,7 @@ const Sidebar = () => {
       {/* Diễn đàn & Dự án */}
       <div className="mt-4  border-gray-200 pt-3">
         <MyForm />
-        <MyProject />
+ 
       </div>
     </aside>
   );

@@ -78,7 +78,7 @@ export default function AskQuestionModal({ onClose }) {
     formData.append("user_id", inforUser?.user?.id);
     formData.append("title", title);
     formData.append("content", content);
-    formData.append("tags", Tags); // tự đông chuyển đổi array thành string và cách nhau bằng đấu ,
+    formData.append("tags", JSON.stringify(Tags)); // tự đông chuyển đổi array thành string và cách nhau bằng đấu ,
     formData.append("folder", "");
     formData.append("type", activeTab);
     console.log(formData.getAll);

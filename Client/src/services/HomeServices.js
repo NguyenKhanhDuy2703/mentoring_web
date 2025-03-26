@@ -5,3 +5,8 @@ export const homeApi = async () =>{
     const request = await axiosInstance.get(url);
     return request.data;
 }
+export const getAllUser = async () => {
+    const url = "/home/user-get-all";
+    const request = await axiosInstance.get(url);
+    return request.data;
+}
