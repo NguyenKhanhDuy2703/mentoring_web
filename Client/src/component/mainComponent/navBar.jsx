@@ -67,7 +67,7 @@ const Navbar = () => {
                 Thông tin cá nhân
               </li>
               <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                <button onClick={Logout}>Đăng xuất </button>
+                <button onClick={Logout}> { inforUser?.user?.full_name ? " Đăng xuất " : "Đăng nhập"}  </button>
               </li>
             </ul>
           </div>
