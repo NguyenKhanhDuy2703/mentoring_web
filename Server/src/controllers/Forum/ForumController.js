@@ -87,7 +87,7 @@ const createQuestion = async (req, res) => {
 
 
 
-const getAllQuestion =  async (req , res , io) => {
+const getAllQuestion =  async (req , res ) => {
   try{
     const listQuestion = await db.Question.findAll(
       {
