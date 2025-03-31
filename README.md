@@ -1,73 +1,137 @@
-# FE - > run ( npm run dev )
-# BE - > run ( npm start ) 
+# MENTORING - A Platform Connecting Mentors and Students
 
-# Data - version 1
-# Bảng người dùng (Mentor & Mentee) 
-CREATE TABLE Users ( 
-   id INT AUTO_INCREMENT PRIMARY KEY, 
-   
-   full_name VARCHAR(255) NOT NULL, 
+## 1. Introduction
 
-   email VARCHAR(255) UNIQUE NOT NULL,
+### 1.1. Project Description
 
-   password_hash VARCHAR(255) NOT NULL, 
+**MENTORING** is an online platform that connects **Mentors** (experts, lecturers, alumni) with **Students/Mentees** (students or individuals seeking career guidance). The project aims to **support learning, scientific research, skill development**, and **team management**.
 
-   role ENUM('mentor', 'mentee') NOT NULL,
+### 1.2. Key Features
 
-   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP );
-# Bảng diễn đàn Q&A 
-CREATE TABLE Questions ( 
-   id INT AUTO_INCREMENT PRIMARY KEY,
-   
-   user_id INT NOT NULL,
+- **Connect Mentors and Students/Mentees** based on expertise.
+- **Q&A Forum System** to support academic discussions and IT research.
+- **Resource Sharing & Group Project Management**.
+- **Personalized Learning Roadmaps** based on Mentor recommendations.
+- **Direct Chat & Communication** between Mentors and Students.
 
-   title VARCHAR(255) NOT NULL,
+---
 
-   body TEXT NOT NULL, 
+## 2. Installation Guide
 
-   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+### 2.1. System Requirements
 
-   FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE 
-   );
-# bảng Answers 
-CREATE TABLE Answers ( 
-   id INT AUTO_INCREMENT PRIMARY KEY, 
+- **Node.js** >= 22.11.0
+- **NPM** >= 10.9.1
+- **Database:** MySQL (pre-configured with schema name `mentoringplatform`)
 
-   question_id INT NOT NULL,
+### 2.2. Installation
 
-   user_id INT NOT NULL, 
+```sh
+# Clone repository
+git clone https://github.com/NguyenKhanhDuy2703/mentoring_web.git
 
-   body TEXT NOT NULL, 
+# Run the frontend
+cd client 
+# Install dependencies
+npm install 
 
-   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+# Run the backend
+cd server 
+# Install dependencies
+npm install 
+```
 
-   FOREIGN KEY (question_id) REFERENCES Questions(id) ON DELETE  CASCADE,
+### 2.3. Running the Project
 
-   FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE 
-   );
-# AnswerVotes
-CREATE TABLE AnswerVotes (
-   id INT AUTO_INCREMENT PRIMARY KEY,
+#### Start the Frontend
+```sh
+npm run dev
+```
 
-   answer_id INT NOT NULL, 
+#### Setup Database
+```sh
+# Step 1: Access src/config/configs.js 
+# Step 2: Enter your username, password, and host
+# Step 3: Run the database migration
+npx sequelize-cli db:migrate
+```
 
-   user_id INT NOT NULL,
+#### Start the Server
+```sh
+npm start 
+```
 
-   vote_type ENUM('upvote', 'downvote') NOT NULL,
+---
 
-   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+## 3. Usage & Examples
 
-   FOREIGN KEY (answer_id) REFERENCES Answers(id) ON DELETE CASCADE, 
+- **Create an account & log in** to access the platform.
+- **Find Mentors/Mentees** by field, project, or skills.
+- **Participate in forums** to ask questions and share knowledge.
+- **Manage personal projects** with team collaboration tools.
 
-   FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE 
-   );
-# QuestionTags
-CREATE TABLE QuestionTags ( 
-   id INT AUTO_INCREMENT PRIMARY KEY,
+---
 
-   question_id INT NOT NULL, 
+## 4. Dependencies
 
-   tag VARCHAR(50) NOT NULL,
-   
-   FOREIGN KEY (question_id) REFERENCES Questions(id) ON DELETE CASCADE 
-   );
+### 4.1. Frontend Dependencies:
+- React
+- React DOM
+- React Router DOM
+- TailwindCSS
+- Axios
+- Framer Motion
+- Lucide React
+- React Toastify
+- Socket.io-client
+
+### 4.2. Backend Dependencies:
+- Express.js
+- MySQL2
+- Sequelize
+- Firebase Admin
+- JSON Web Token (JWT)
+- Cloudinary
+- Multer
+- Bcrypt
+- Socket.io
+
+---
+
+## 5. Support
+
+- **Email:** snguyenkhanhduy270304@gmail.com
+
+---
+
+## 6. References
+
+- [Node.js Documentation](https://nodejs.org/docs/latest/api/)
+- [Sequelize Documentation](https://sequelize.org/)
+- [React Documentation](https://react.dev/)
+- [Socket.io Documentation](https://socket.io/docs/v4/tutorial/introduction)
+
+---
+
+## 7. Changelog
+
+- **v1.0.0:** Initial release with core features.
+- **v1.1.0:** UI improvements.
+- **v1.2.0:** Authentication updates, added post and question creation features.
+- **v1.3.0:** UI optimizations.
+- **v1.4.0:** Search functionality for articles by tags.
+- **v1.5.0:** Added UI for comments and backend handling.
+
+---
+
+## 8. Known Issues
+
+- Some UI glitches on Safari.
+- Search performance may be slow with a high number of users.
+
+---
+
+## 9. Badges
+
+*(Insert project status badges if available)*
+
