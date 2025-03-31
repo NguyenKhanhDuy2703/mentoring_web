@@ -10,3 +10,8 @@ export const getAllUser = async () => {
     const request = await axiosInstance.get(url);
     return request.data;
 }
+export const getAllTag = async () => {
+    const url = "/home/get-all-tags";
+    const request = await axiosInstance.get(url);
+    return request.data;
+}

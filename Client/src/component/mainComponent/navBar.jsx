@@ -5,13 +5,15 @@ import FilterButton from "../mainComponent/filterButton";
 import ImageUser from "../../assets/images/user.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
-import { inforUserContext } from "../../layouts/mainLayout";
+import { inforUserContext  } from "../../layouts/mainLayout";
 import { logout } from "../../services/authServices";
 import Cookies from "js-cookie";
-const Navbar = () => {
+const Navbar = ( ) => {
   const [isOpen, setIsOpen] = useState(false);
   const inforUser = useContext(inforUserContext);
+
   const navigate = useNavigate();
+  
   const Logout = async () => {
     const token = Cookies.get("token");
     if (token) {

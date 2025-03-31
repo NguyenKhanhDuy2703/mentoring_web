@@ -1,7 +1,11 @@
 const { type } = require("os");
 const db = require("../../models/index");
 const { raw } = require("mysql2");
-const { json } = require("sequelize");
+const { json, where } = require("sequelize");
+const express = require("express");
+const router = express.Router();
+
+
 
 const createQuestion = async (req, res) => {
   const io = req.app.locals.io;
@@ -58,7 +62,7 @@ const createQuestion = async (req, res) => {
       );
 
       return { createdQuestion, createdTags };
-    } );
+    });
 
     // Lấy thông tin người dùng
     const userQuestion = await db.User.findOne({
@@ -69,8 +73,8 @@ const createQuestion = async (req, res) => {
     // Cập nhật dữ liệu để emit
     result.createdQuestion.dataValues.user = userQuestion;
     result.createdQuestion.dataValues.tags = result.createdTags;
-    
-    
+
+
     // Emit sự kiện socket
     io.emit("newQuestion", result.createdQuestion);
 
@@ -87,38 +91,72 @@ const createQuestion = async (req, res) => {
 
 
 
+
 const getAllQuestion =  async (req , res ) => {
   try{
     const listQuestion = await db.Question.findAll(
       {
-      include:[{
-        model : db.User,
-        as : "user",
-        attributes : ["full_name","role"]
-      },
-      {
-        model : db.Tag,
-        as : "tags",
-        attributes : ["name"],
-        through : {attributes : []}
-      }
-      ],
-      order:[["createdAt","DESC"]]
-    });
+        include: [{
+          model: db.User,
+          as: "user",
+          attributes: ["full_name", "role"]
+        },
+        {
+          model: db.Tag,
+          as: "tags",
+          attributes: ["name"],
+          through: { attributes: [] }
+        }
+        ],
+        order: [["createdAt", "DESC"]]
+      });
     console.log(listQuestion)
-    if(!listQuestion){
-      return res.status(404).json({message:"Not found question"})
+    if (!listQuestion) {
+      return res.status(404).json({ message: "Not found question" })
     }
-    
+
     return res.status(200).json({
-      message:"Get all question successfully",
-      data:listQuestion,
+      message: "Get all question successfully",
+      data: listQuestion,
     })
-  }catch(error){
-    res.status(500).json({message:error.message})
+  } catch (error) {
+    res.status(500).json({ message: error.message })
   }
 }
+const getQuestionFollowTag = async (req, res) => {
+  try {
+    const name = req.query.tag; // Lấy giá trị của "tag" từ URL
+    if( !name ){
+      return res.status(300).json({
+        message: " tags is empty "
+      })
+    }
+    const listQuestion = await db.Question.findAll(
+      {
+        where: name ,
+        include: [{
+          model: db.User,
+          as: "user",
+          attributes: ["full_name", "role"]
+        },
+        {
+          model: db.Tag,
+          as: "tags",
+          attributes: ["name"],
+          through: { attributes: [] }
+        }
+        ],
+        order: [["createdAt", "DESC"]]
+      });
 
-
-
-module.exports = { createQuestion , getAllQuestion };
+    
+    return res.status(200).json({
+      message: `get Tag ${name} thanh cong`
+    })
+  } catch (error) {
+    return res.status(500).json({
+      message: error
+    })
+  }
+}
+  module.exports = { createQuestion, getAllQuestion,getQuestionFollowTag }
