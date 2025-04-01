@@ -7,6 +7,9 @@ import AuthenLayout from "../layouts/authenLayout";
 import Login from "../component/auth/login";
 import Register from "../component/auth/register";
 import HomePage from "../pages/homePage";
+import MainManagerProject from "../pages/manager/mainManagerProject";
+import ProjectDetails from "../pages/manager/projectDetails";
+import LibraryPage from "../pages/library/libraryPage";
 
 const AppRouter = () => {
   return (
@@ -17,14 +20,17 @@ const AppRouter = () => {
              <Route index element={<MainForum />} />
             <Route path=":category" element={<CategoryForum />} />
           </Route>
+
+          <Route path="/managerproject" element={<MainManagerProject />} />
+          <Route path="/project/:id" element={<ProjectDetails />} />
+
+          <Route path="/library" element={<LibraryPage />} />
        </Route>
        <Route path="/auth" element={<AuthenLayout />}>
          <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
        </Route>
-
-    
-          
+   
     </Routes>
   );
 };
