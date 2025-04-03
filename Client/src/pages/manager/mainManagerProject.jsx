@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useNavigate } from "react-router-dom";
 const MainManagerProject = () => {
   const navigate = useNavigate();
@@ -71,3 +72,39 @@ const MainManagerProject = () => {
 }
 
 export default MainManagerProject;
+=======
+const MainManagerProject = () => {
+  const projects = Array(6).fill({
+    title: "Blockchain and Cryptocurrency",
+    description: "Brainstorming brings team members' diverse experience into play.",
+    files: 15,
+  });
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+      {projects.map((project, index) => (
+        <div
+          key={index}
+          className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
+        >
+          <h2 className="font-semibold text-lg text-gray-800 border-b-2 border-orange-500 pb-2 mb-4">
+            {project.title}
+          </h2>
+          <div className="bg-gray-100 p-4 rounded-lg">
+            <h3 className="font-bold text-gray-700">Description</h3>
+            <p className="text-sm text-gray-600 mt-1">{project.description}</p>
+            <div className="flex items-center justify-between mt-4">
+              <span className="text-gray-500 text-sm">📁 {project.files} files</span>
+              <button className="px-4 py-2 text-orange-500 border border-orange-500 rounded-lg hover:bg-orange-500 hover:text-white transition">
+                Chi tiết
+              </button>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default MainManagerProject;
+>>>>>>> 22b73ab (version 5)

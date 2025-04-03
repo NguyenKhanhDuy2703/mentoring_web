@@ -6,13 +6,13 @@ export const createQuestion = async (question) => {
   console.log(request);
   return request.data;
 };
-export const getAllQuestion = async () => {
-  const url = "/forum/get-all-question";
-  const request = await axiosInstance.get(url, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  return request.data;
+export const getAllQuestion = async (page = 1, limit = 10) => {
+  const response = await axiosInstance.get(`/forum/get-all-question?page=${page}&limit=${limit}`);
+  console.log(response);
+  return response.data;
 };
+export const getQuestionFollowTags = async (name, page = 1, limit = 10) => {
+  const response = await axiosInstance.get(`/forum/get-question-by-tag?name=${name}&page=${page}&limit=${limit}`);
+  return response.data;
+}
 

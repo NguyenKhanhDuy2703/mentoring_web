@@ -3,22 +3,21 @@ import { LuMessageCircleWarning } from "react-icons/lu";
 import InputSearch from "../input_search";
 import FilterButton from "../mainComponent/filterButton";
 import ImageUser from "../../assets/images/user.jpg";
-import { Link, useNavigate } from "react-router-dom";
-import { useContext, useState } from "react";
-import { inforUserContext  } from "../../layouts/mainLayout";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useUser } from "../../contexts/UserContext"; // Import useUser hook
 import { logout } from "../../services/authServices";
-import Cookies from "js-cookie";
-const Navbar = ( ) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const inforUser = useContext(inforUserContext);
 
+const Navbar = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const { user, setUser } = useUser(); // Use user context
   const navigate = useNavigate();
-  
   const Logout = async () => {
-    const token = Cookies.get("token");
-    if (token) {
+    if (user) {
       await logout();
     }
+
+    setUser(null); // Clear user state
     setIsOpen(false);
     setTimeout(() => {
       navigate("/auth/login");
@@ -49,10 +48,10 @@ const Navbar = ( ) => {
         >
           <div className="text-right">
             <p className="text-sm font-semibold capitalize">
-              {inforUser?.user?.full_name || "Guest"}
+              {user?.full_name || "Guest"}
             </p>
             <p className="text-xs text-gray-500 capitalize ">
-              {inforUser?.user?.role || ""}
+              {user?.role || ""}
             </p>
           </div>
           <img
@@ -69,7 +68,9 @@ const Navbar = ( ) => {
                 Thông tin cá nhân
               </li>
               <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                <button onClick={Logout}> { inforUser?.user?.full_name ? " Đăng xuất " : "Đăng nhập"}  </button>
+                <button onClick={Logout}>
+                  {user ? " Đăng xuất " : "Đăng nhập"}
+                </button>
               </li>
             </ul>
           </div>

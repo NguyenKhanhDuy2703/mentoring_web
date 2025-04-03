@@ -45,7 +45,7 @@ const Register = () => {
         setTimeout(() => navigate('/auth/login'), 2500);
       }
     } catch (error) {
-      toast.error("❌ Đăng ký thất bại! Vui lòng thử lại.");
+      toast.error("❌ Đăng ký thất bại! Vui lòng thử lại. ,",error.message);
       console.error(error);
     } finally {
       setLoading(false);

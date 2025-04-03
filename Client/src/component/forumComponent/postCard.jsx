@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { useContext, useState } from "react";
 import { QuestionContext } from "../../pages/forum/mainForum.jsx";
+import {QuestionContext2} from "../../pages/forum/categoryForum.jsx"
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import AvatarDefault from "../../assets/images/avatar_macdinh.webp";
@@ -18,19 +19,19 @@ dayjs.locale("vi");
 const PostCard = () => {
   const inforPost = useContext(QuestionContext);
   const [likedPosts, setLikedPosts] = useState({});
-  const [showCommnet, setShowComment] = useState(false);
-
+  const [showCommnet, setShowComment] = useState(null); // Set null initially to track which post has its comments visible
+  const posts = inforPost || [];
   const handleLike = (postId) => {
     setLikedPosts((prev) => ({ ...prev, [postId]: !prev[postId] }));
   };
 
-  const toggleComment = () => {
-    setShowComment((prev) => !prev);
+  const toggleComment = (postId) => {
+    setShowComment((prev) => (prev === postId ? null : postId)); // Toggle visibility based on postId
   };
 
   return (
     <div className="flex flex-col space-y-6">
-      {inforPost?.data?.map((post) => {
+      { posts?.data?.map((post) => {
         const avatarSrc = post.user?.avatar || AvatarDefault;
         const isLiked = likedPosts[post.id] || false;
 
@@ -107,7 +108,7 @@ const PostCard = () => {
               </button>
               <button
                 className="flex items-center gap-1 px-3 py-1 text-gray-600 hover:text-gray-800 hover:bg-gray-200 rounded transition duration-200 ease-in-out"
-                onClick={toggleComment} // Toggle comment visibility
+                onClick={() => toggleComment(post.id)} // Toggle comment visibility for the specific post
               >
                 <MessageCircle size={16} /> <span>Comment</span>
               </button>
@@ -119,8 +120,8 @@ const PostCard = () => {
               </button>
             </div>
 
-            {/* Hiển thị phần bình luận nếu showCommnet là true */}
-            {showCommnet && <BoxComment />}
+            {/* Hiển thị phần bình luận chỉ cho câu hỏi có id khớp */}
+            {showCommnet === post.id && <BoxComment question_id={post.id} />}
           </div>
         );
       })}

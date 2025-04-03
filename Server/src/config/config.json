@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "root",
-    "password": "MinhThang@2022",
+    "password": "duy270304",
     "database": "mentoringplatform",
     "host": "127.0.0.1",
     "dialect": "mysql"

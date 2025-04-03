@@ -3,7 +3,6 @@ import { MdForum } from "react-icons/md";
 import { RiRoadMapLine } from "react-icons/ri";
 import { HiLibrary } from "react-icons/hi";
 import MyForm from "./myForum";
-import MyProject from "./myProject";
 import { Link } from "react-router-dom";
 
 const Sidebar = () => {

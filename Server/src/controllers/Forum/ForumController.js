@@ -85,148 +85,94 @@ const createQuestion = async (req, res) => {
   }
 };
 
-
-
 const getAllQuestion =  async (req , res ) => {
-  try{
-    const listQuestion = await db.Question.findAll(
-      {
-      include:[{
-        model : db.User,
-        as : "user",
-        attributes : ["full_name","role"]
-      },
-      {
-        model : db.Tag,
-        as : "tags",
-        attributes : ["name"],
-        through : {attributes : []}
-      }
-      ],
-      order:[["createdAt","DESC"]]
-    });
-    console.log(listQuestion)
-    if(!listQuestion){
-      return res.status(404).json({message:"Not found question"})
-    }
-    
-    return res.status(200).json({
-      message:"Get all question successfully",
-      data:listQuestion,
-    })
-  }catch(error){
-    res.status(500).json({message:error.message})
-  }
-}
-
-//  Hàm tạo bình luận
-const createComment = async (req, res) => {
+  const page = parseInt(req.query.page) || 1; // Trang hiện tại
+  const limit = parseInt(req.query.limit) || 10; // Số lượng câu hỏi mỗi trang
+  const offset = (page - 1) * limit; // Tính toán offset
   try {
-    const { question_id, content } = req.body;
-    const user_id = req.data.id; // Lấy user từ token
+    const { count, rows } = await db.Question.findAndCountAll( // Sử dụng findAndCountAll
+      {
+        include: [
+          {
+            model: db.User,
+            as: "user",
+            attributes: ["full_name", "role"]
+          },
+          {
+            model: db.Tag,
+            as: "tags",
+            attributes: ["name"],
+            through: { attributes: [] }
+          }
+        ],
+        attributes : ["id", "title", "body", "image", "folder", "type", "createdAt", "updatedAt"],
+        order: [["createdAt", "DESC"]],
+        limit: limit,
+        offset: offset,
+      }
+    );
 
-    // Kiểm tra dữ liệu đầu vào
-    if (!question_id || !content.trim()) {
-      return res.status(400).json({ message: "Invalid input" });
+    const totalPages = Math.ceil(count / limit); // Tính tổng số trang
+    if (rows.length === 0) {  // Kiểm tra xem có câu hỏi nào không
+      return res.status(404).json({ message: "No questions found" });
     }
 
-    // Tạo comment
-    const newComment = await db.Comment.create({ question_id, user_id, content });
-
-    // Lấy thông tin user để trả về
-    const userComment = await db.User.findOne({
-      where: { id: user_id },
-      attributes: ["full_name", "role"],
-    });
-
-    // Emit sự kiện Socket.io để cập nhật real-time
-    const io = req.app.locals.io;
-    io.emit("newComment", { ...newComment.dataValues, user: userComment });
-
-    return res.status(201).json({
-      message: "Comment created successfully",
-      data: { ...newComment.dataValues, user: userComment },
+    return res.status(200).json({
+      message: "Get all questions successfully",
+      data: rows,
+      currentPage: page,
+      totalPages: totalPages,
     });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
 };
-
-//  Hàm lấy danh sách bình luận theo câu hỏi
-const getCommentsByQuestion = async (req, res) => {
+const getAllQuestionByTag = async (req, res) => {
+  const { name } = req.query; // Lấy tag từ query string
+  const page = parseInt(req.query.page) || 1; // Trang hiện tại
+  const limit = parseInt(req.query.limit) || 10; // Số lượng câu hỏi mỗi trang
+  const offset = (page - 1) * limit; // Tính toán offset
+  console.log(req.query)
   try {
-    const { questionId } = req.params;
-
-    // Lấy danh sách bình luận theo câu hỏi
-    const comments = await db.Comment.findAll({
-      where: { question_id: questionId },
+    const { count, rows } = await db.Question.findAndCountAll({
       include: [
         {
           model: db.User,
           as: "user",
           attributes: ["full_name", "role"],
         },
+        {
+          model: db.Tag,
+          as: "tags",
+          attributes: ["name"],
+          through: { attributes: [] },
+          where: { name: name }, // Lọc theo tag
+        },
       ],
       order: [["createdAt", "DESC"]],
+      limit: limit,
+      offset: offset,
     });
 
+    const totalPages = Math.ceil(count / limit); // Tính tổng số trang
+    if (rows.length === 0) {
+      return res.status(404).json({ message: "No questions found" });
+    }
+    console.log(rows)
     return res.status(200).json({
-      message: "Get comments successfully",
-      data: comments,
+      message: "Get all questions by tag successfully",
+      data: rows,
+      currentPage: page,
+      totalPages: totalPages,
     });
+
+
   } catch (error) {
+    console.log(error)
     return res.status(500).json({ message: error.message });
   }
-};
+}
 
-//  Chỉnh sửa bình luận
-const updateComment = async (req, res) => {
-  try {
-    const { commentId } = req.params;
-    const { content } = req.body;
-    const user_id = req.data.id; // Lấy user từ token
 
-    // Kiểm tra dữ liệu đầu vào
-    if (!content.trim()) {
-      return res.status(400).json({ message: "Comment content cannot be empty" });
-    }
 
-    // Tìm bình luận trong database
-    const comment = await db.Comment.findOne({ where: { id: commentId, user_id } });
-
-    if (!comment) {
-      return res.status(404).json({ message: "Comment not found or you don't have permission" });
-    }
-
-    // Cập nhật nội dung bình luận
-    await comment.update({ content });
-
-    return res.status(200).json({ message: "Comment updated successfully", data: comment });
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
-  }
-};
-
-//  Xóa bình luận
-const deleteComment = async (req, res) => {
-  try {
-    const { commentId } = req.params;
-    const user_id = req.data.id; // Lấy user từ token
-
-    // Kiểm tra bình luận
-    const comment = await db.Comment.findOne({ where: { id: commentId, user_id } });
-
-    if (!comment) {
-      return res.status(404).json({ message: "Comment not found or you don't have permission" });
-    }
-
-    // Xóa bình luận
-    await comment.destroy();
-
-    return res.status(200).json({ message: "Comment deleted successfully" });
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
-  }
-};
-
-module.exports = { createQuestion, getAllQuestion, createComment, getCommentsByQuestion, updateComment, deleteComment };
+module.exports = { createQuestion , getAllQuestion  , getAllQuestionByTag };
