@@ -1,8 +1,9 @@
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useEffect  } from "react";
 
-import {  AnimatePresence , motion  } from "framer-motion";
+
 import HinhLogin from "../assets/images/hinhLogin.jpg";
+import {  AnimatePresence , motion  } from "framer-motion";
 const AuthenLayout = () => {
   const location = useLocation();
   const navigate = useNavigate();

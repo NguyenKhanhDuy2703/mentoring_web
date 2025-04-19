@@ -32,3 +32,9 @@ export const logout = async () => {
     console.log(requestLogout);
     return requestLogout;
 }
+
+export const getUserbyToken = async () => {
+    const urlGetUser = "auth/get-token";
+    const requestGetUser = await axiosInstance.get(urlGetUser);
+    return requestGetUser.data;
+}

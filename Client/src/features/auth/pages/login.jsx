@@ -3,7 +3,7 @@ import { LuEyeClosed, LuEye } from "react-icons/lu";
 import { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { login } from "../../services/authServices";
+import { login } from "../../../services/authServices";
 import Cookies from "js-cookie";
 
 const Login = () => {
